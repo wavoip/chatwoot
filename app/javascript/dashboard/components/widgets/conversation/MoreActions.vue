@@ -1,52 +1,6 @@
-<template>
-  <div class="flex actions--container relative items-center gap-2">
-    <woot-button
-      v-tooltip="$t('WEBPHONE.CALL')"
-      variant="clear"
-      color-scheme="secondary"
-      icon="call"
-      :disabled="callInfo.id"
-      @click="startCall"
-    />
-    <woot-button
-      v-if="!currentChat.muted"
-      v-tooltip="$t('CONTACT_PANEL.MUTE_CONTACT')"
-      variant="clear"
-      color-scheme="secondary"
-      icon="speaker-mute"
-      @click="mute"
-    />
-    <woot-button
-      v-else
-      v-tooltip.left="$t('CONTACT_PANEL.UNMUTE_CONTACT')"
-      variant="clear"
-      color-scheme="secondary"
-      icon="speaker-1"
-      @click="unmute"
-    />
-    <woot-button
-      v-tooltip="$t('CONTACT_PANEL.SEND_TRANSCRIPT')"
-      variant="clear"
-      color-scheme="secondary"
-      icon="share"
-      @click="toggleEmailActionsModal"
-    />
-    <resolve-action
-      :conversation-id="currentChat.id"
-      :status="currentChat.status"
-    />
-    <email-transcript-modal
-      v-if="showEmailActionsModal"
-      :show="showEmailActionsModal"
-      :current-chat="currentChat"
-      @cancel="toggleEmailActionsModal"
-    />
-  </div>
-</template>
 <script>
 import { useAlert } from 'dashboard/composables';
 import { mapGetters } from 'vuex';
-import alertMixin from 'shared/mixins/alertMixin';
 import EmailTranscriptModal from './EmailTranscriptModal.vue';
 import ResolveAction from '../../buttons/ResolveAction.vue';
 import {
@@ -60,7 +14,6 @@ export default {
     EmailTranscriptModal,
     ResolveAction,
   },
-  mixins: [alertMixin],
   data() {
     return {
       showEmailActionsModal: false,
@@ -112,11 +65,11 @@ export default {
     },
     mute() {
       this.$store.dispatch('muteConversation', this.currentChat.id);
-      this.showAlert(this.$t('CONTACT_PANEL.MUTED_SUCCESS'));
+      useAlert(this.$t('CONTACT_PANEL.MUTED_SUCCESS'));
     },
     unmute() {
       this.$store.dispatch('unmuteConversation', this.currentChat.id);
-      this.showAlert(this.$t('CONTACT_PANEL.UNMUTED_SUCCESS'));
+      useAlert(this.$t('CONTACT_PANEL.UNMUTED_SUCCESS'));
     },
     toggleEmailActionsModal() {
       this.showEmailActionsModal = !this.showEmailActionsModal;
@@ -124,6 +77,53 @@ export default {
   },
 };
 </script>
+
+<template>
+  <div class="relative flex items-center gap-2 actions--container">
+    <woot-button
+      v-tooltip="$t('WEBPHONE.CALL')"
+      variant="clear"
+      color-scheme="secondary"
+      icon="call"
+      :disabled="callInfo.id"
+      @click="startCall"
+    />
+    <woot-button
+      v-if="!currentChat.muted"
+      v-tooltip="$t('CONTACT_PANEL.MUTE_CONTACT')"
+      variant="clear"
+      color-scheme="secondary"
+      icon="speaker-mute"
+      @click="mute"
+    />
+    <woot-button
+      v-else
+      v-tooltip.left="$t('CONTACT_PANEL.UNMUTE_CONTACT')"
+      variant="clear"
+      color-scheme="secondary"
+      icon="speaker-1"
+      @click="unmute"
+    />
+    <woot-button
+      v-tooltip="$t('CONTACT_PANEL.SEND_TRANSCRIPT')"
+      variant="clear"
+      color-scheme="secondary"
+      icon="share"
+      @click="toggleEmailActionsModal"
+    />
+    <ResolveAction
+      :conversation-id="currentChat.id"
+      :status="currentChat.status"
+    />
+    <EmailTranscriptModal
+      v-if="showEmailActionsModal"
+      :show="showEmailActionsModal"
+      :current-chat="currentChat"
+      @cancel="toggleEmailActionsModal"
+    />
+  </div>
+</template>
+
 <style scoped lang="scss">
 .more--button {
   @apply items-center flex ml-2 rtl:ml-0 rtl:mr-2;
