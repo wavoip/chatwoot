@@ -111,9 +111,11 @@ export const actions = {
       let remainingInstances = instances.filter(instance => instance !== token);
 
       if (offerResponse.message === 'Numero não existe') {
-        throw new Error(offerResponse.message);
+        useAlert(`${inbox_name} - Contato não existe no Whatsapp`);
       } else if (offerResponse.message === 'Limite de ligações atingido') {
-        useAlert('Limite de ligações diários atingido');
+        useAlert(`${inbox_name} - Limite de ligações diários atingido`);
+      } else if (offerResponse.message === 'Whatsapp desconectado') {
+        useAlert(`${inbox_name} - Whatsapp está desconectado`);
       }
 
       if (remainingInstances.length > 0) {
@@ -123,7 +125,7 @@ export const actions = {
           token: null,
         });
       } else {
-        throw new Error('Linha ocupada, tente mais tarde ou faça um upgrade');
+        useAlert('Nenhuma linha disponivel para completar a chamada');
       }
 
       return;
