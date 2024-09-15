@@ -3,6 +3,8 @@ class Api::V1::Accounts::Channels::EvolutionChannelsController < Api::V1::Accoun
   before_action :authorize_request
   before_action :set_user
 
+  # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/MethodLength
   def create
     params = permitted_params(channel_type_from_params::EDITABLE_ATTRS)[:channel].except(:type)
     evolution_api_url = ENV.fetch('EVOLUTION_API_URL', params[:webhook_url])
@@ -21,8 +23,10 @@ class Api::V1::Accounts::Channels::EvolutionChannelsController < Api::V1::Accoun
         )
       )
 
-      Evolution::ManagerService.new.create(@inbox.account_id, permitted_params[:name], evolution_api_url,
-                                           evolution_api_key, @user.access_token.token)
+      response = Evolution::ManagerService.new.create(@inbox.account_id, permitted_params[:name], evolution_api_url,
+                                                      evolution_api_key, @user.access_token.token)
+
+      @inbox.external_token = response['hash']
       @inbox.save!
     end
 
@@ -30,6 +34,8 @@ class Api::V1::Accounts::Channels::EvolutionChannelsController < Api::V1::Accoun
   rescue StandardError => e
     render json: { error: e.message }, status: :unprocessable_entity
   end
+  # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Metrics/MethodLength
 
   private
 

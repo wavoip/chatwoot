@@ -3,6 +3,7 @@ class Evolution::ManagerService
     { 'apikey' => api_key, 'Content-Type' => 'application/json' }
   end
 
+  # rubocop:disable Metrics/MethodLength
   def create(account_id, name, webhook_url, api_key, access_token)
     frontend_url = ENV.fetch('FRONTEND_URL', 'http://localhost:3000')
     internal_api_url = ENV.fetch('INTERNAL_API_URL', nil) || frontend_url
@@ -32,6 +33,7 @@ class Evolution::ManagerService
 
     process_response(response)
   end
+  # rubocop:enable Metrics/MethodLength
 
   def process_response(response)
     if response.success?
@@ -40,5 +42,7 @@ class Evolution::ManagerService
       Rails.logger.error response.body
       nil
     end
+
+    response
   end
 end

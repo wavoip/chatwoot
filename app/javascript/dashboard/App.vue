@@ -17,6 +17,7 @@ import {
   verifyServiceWorkerExistence,
 } from './helper/pushHelper';
 import ReconnectService from 'dashboard/helper/ReconnectService';
+import Webphone from './components/layout/webphoneComponents/Webphone.vue';
 
 export default {
   name: 'App',
@@ -30,6 +31,7 @@ export default {
     WootSnackbarBox,
     UpgradeBanner,
     PendingEmailVerificationBanner,
+    Webphone,
   },
   data() {
     return {
@@ -127,6 +129,7 @@ export default {
     <template v-if="currentAccountId">
       <PendingEmailVerificationBanner v-if="hideOnOnboardingView" />
       <PaymentPendingBanner v-if="hideOnOnboardingView" />
+      <Webphone />
       <UpgradeBanner />
     </template>
     <transition name="fade" mode="out-in">
