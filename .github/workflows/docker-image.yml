@@ -56,6 +56,11 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      - name: Increase yarn network timeout and install dependencies
+        run: |
+          yarn config set network-timeout 600000 -g
+          yarn install
+          
       - name: Build and push
         uses: docker/build-push-action@v2
         with:
