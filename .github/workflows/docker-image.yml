@@ -58,8 +58,7 @@ jobs:
 
       - name: Increase yarn network timeout and install dependencies
         run: |
-          yarn config set network-timeout 600000 -g
-          yarn install
+          yarn config set network-timeout 900000 -g
           
       - name: Build and push
         uses: docker/build-push-action@v2
